@@ -1,0 +1,59 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+{% include "header.html" %}
+
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('{{ url_for('static', filename='img/shopping-cart.jpg')}}')">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="page-heading">
+                    <h1>Select Your Address</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        {% for address in addresses %}
+    <div class="row border border-primary rounded bg-secondary border-5" style="margin:20px;">
+        <div class="post-preview col-lg-12" style="padding:10px;">
+            <h2 class="post-title">
+                <a href="{{ url_for('checkout', address_id=address.id) }}">
+                  <p>Country: {{address.country}}, Region: {{address.region}}</p>
+                    <br>
+                    <p>City: {{address.city}}, Street: {{address.street}}, Street Number: {{address.street_number}}, Type: {{address.address_type}}</p>
+                </a>
+            </h2>
+
+          </div>
+        <hr>
+      </div>
+      <a class="float-right" style="margin-top:100px;" href="{{url_for('delete_address', address_id=address.id)}}">❌</a>
+      <hr>
+        {% endfor %}
+    </div>
+    <br>
+    <hr>
+    <br>
+    {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+    <br>
+    <hr>
+    <br>
+    <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="clearfix">
+            <a class="btn btn-primary float-left" style="margin-left:50px;" href="{{url_for('get_all_posts')}}">Return to shopping</a>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+{% include "footer.html" %}
+{% endblock %}

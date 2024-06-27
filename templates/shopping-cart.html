@@ -1,0 +1,50 @@
+{% include "header.html" %}
+
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('{{ url_for('static', filename='img/shopping-cart.jpg')}}')">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="page-heading">
+                    <h1> My Shopping Cart</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        {% for item in cart_items %}
+    <div class="row border border-light rounded bg-light" style="padding:20px; margin:20px;">
+         <div class="item-image col-lg-5 border border-light rounded">
+          <img src={{url_for('static',filename=item["item"].img_icon)}} alt="Item Image" style="padding:20px;">
+        </div>
+        <div class="post-preview col-lg-7" style="padding:20px;">
+            <h2 class="post-title">
+              <a href="{{ url_for('show_item', item_id=item['item'].id) }}"> {{item["item"].item_name}}</a>
+            </h2>
+              <p>Quantity: {{item["item_actions"].cart_quantity}}</p>
+                <a class="btn btn-outline-primary float-left rounded" style="margin-left:20px;" href="{{url_for('change_qty_cart', cart_item_id=item['item_actions'].id, qty_change=-1)}}">-</a><a class="btn btn-outline-primary float-left rounded" style="margin-left:10px; margin-right:50px;" href="{{url_for('change_qty_cart', cart_item_id=item['item_actions'].id, qty_change=1)}}">+</a>
+            <a class="float-right" href="{{url_for('change_qty_cart', cart_item_id=item['item_actions'].id, qty_change=0)}}">✘</a>
+          </div>
+        <hr>
+      </div>
+        {% endfor %}
+        <div class="col-lg-8 col-md-10 mx-auto" style=" margin-bottom:30px">
+            <a class="float-right">Total: {{total_price}} €</a>
+        </div>
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="clearfix">
+                <a class="btn btn-primary float-left" style="margin-left:50px;" href="{{url_for('get_all_posts')}}">Return to shopping</a>
+                <a class="btn btn-primary float-right" style="margin-right:50px;" href="{{url_for('select_address')}}">Checkout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+{% include "footer.html" %}

@@ -1,0 +1,58 @@
+{% include "header.html" %}
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('{{ url_for('static', filename='img/index_img.png')}}')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <h1>The LightShop</h1>
+            <span class="subheading">An online store about light.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container mx-auto">
+    {% for item in all_items %}
+    <div class="row border border-light rounded bg-light" style="padding:20px; margin:20px;">
+         <div class="item-image col-lg-3 border border-light rounded">
+          <img src={{url_for('static',filename=item.img_icon)}} alt="Item Image" style="padding:20px;">
+        </div>
+        <div class="post-preview col-lg-9" style="padding:20px;">
+          <a href="{{ url_for('show_item', item_id=item.id) }}">
+            <h2 class="post-title">
+              {{item.item_name}}
+            </h2>
+            <h3 class="post-subtitle">
+              {% if item.description|length > 100: %}
+                {{item.description[:100]}}
+              {% else: %}
+                {{item.description}}
+              {% endif %}
+            </h3>
+          </a>
+          <p class="post-meta">Rating
+            <span class="meta">User Rating: {{item_rating[all_items.index(item)]["rounded_rating"] * "★"}} {{item_rating[all_items.index(item)]["rating_avg"]}} ({{item_rating[all_items.index(item)]["reviews"]}} reviews)</span>
+            <br>
+            {% if current_user.is_authenticated and current_user.id == 1: %}
+              <a href="{{url_for('delete_post', post_id=item.id) }}">✘</a>
+            {% endif %}
+          </p>
+          </div>
+        <hr>
+      </div>
+        {% endfor %}
+    </div>
+      <!-- New Post -->
+        <div class="clearfix">
+          {% if current_user.is_authenticated and current_user.id == 1: %}
+          <a class="btn btn-primary float-right" style="margin-right:50px;" href="{{url_for('add_new_post')}}">Create New Listing</a>
+          {% endif %}
+        </div>
+  <hr>
+
+{% include "footer.html" %}

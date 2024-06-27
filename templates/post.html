@@ -1,0 +1,80 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% include "header.html" %}
+
+  <!-- Page Header -->
+<header class="masthead"
+        xmlns:margin-bottom="http://www.w3.org/1999/xhtml">
+    <div class="overlay"></div>
+    <div class="container" style="margin-top:20px; bg-color:white;">
+      <div class="row border bg-light" style="padding:20px; margin:20px;">
+          <div class="item-image col-lg-6 col-md-10">
+            <img src={{url_for('static',filename=item.img_lrg)}} class="rounded" alt="Item Image" style="padding:20px;">
+          </div>
+        <div class="col-lg-6 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>{{item.item_name}} {{item.item_code}}</h1>
+            <h2 class="subheading">{{item.category}}</h2>
+            <h2 class="subheading">{{item.description}}</h2>
+              <h2 class="subheading">Price: {{item.price}} €</h2>
+            <span class="meta">User Rating: {{item_rating[0]["rounded_rating"] * "★"}} {{item_rating[0]["rating_avg"]}} ({{item_rating[0]["reviews"]}} reviews)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            {{ item.body|safe }}
+          <hr>
+
+            <div class="clearfix">
+              {% if current_user.is_authenticated and current_user.id == 1: %}
+            <a class="btn btn-primary float-right" style="margin-right:50px;" href="{{url_for('edit_post', item_id=item.id)}}">Edit Post</a>
+              {% endif %}
+                <br>
+                <br>
+                <div class="clearfix">
+                    {% if current_user.is_authenticated: %}
+                        <a class="btn btn-primary float-right" style="margin-right:50px;" href="{{url_for('shopping_cart', item_id=item.id)}}">Add to your cart</a>
+                    {% else: %}
+                        <a class="btn btn-primary float-right" style="margin-right:50px;" href="{{ url_for('login') }}">Add to your cart</a>
+                </div>
+                {% endif %}
+                <br>
+                <br>
+              {{ ckeditor.load() }}
+            {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+            </div>
+
+
+
+<!--           Comments Area -->
+          <div class="col-lg-8 col-md-10 mx-auto comment">
+              {%for comment in comments:%}
+              <ul class="commentList">
+                <li>
+                    <div class="commenterImage">
+                      <img src="{{ comment.review_author.email | gravatar }}"/>
+                    </div>
+                    <div class="commentText">
+                      <p>{{comment.text|safe}}</p>
+                      <span class="date sub-text">{{comment.review_author.name}} {{comment.rating * "★"}}</span>
+                    </div>
+                </li>
+              </ul>
+              {%endfor%}
+            </div>
+
+
+          </div>
+      </div>
+    </div>
+  </article>
+
+  <hr>
+{% include "footer.html" %}
